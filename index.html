@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>lapot.hu – Kattintható prototípus</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL@20..48,100..700,0..1" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #FDF8F0;
+  --bg-white: #FFFFFF;
+  --bg-card: #F5E6D8;
+  --bg-surface: #FAF5EE;
+  --text-primary: #3D2E2A;
+  --text-secondary: #8A7A72;
+  --text-muted: #B0A59D;
+  --text-white: #FFFFFF;
+  --accent-terracotta: #C67B5C;
+  --accent-terracotta-hover: #B06A4B;
+  --accent-olive: #7A8B6F;
+  --accent-olive-light: #E8EDE5;
+  --border-default: #E0D5C8;
+  --border-strong: #C9B9AA;
+  --shadow-color: rgba(60,30,20,0.08);
+  --error: #C4574C;
+  --radius-card: 12px;
+  --radius-button: 28px;
+  --radius-input: 8px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Nunito',sans-serif; color:var(--text-primary); background:var(--bg-primary); }
+h1,h2,h3,h4 { font-family:'DM Serif Display',serif; font-weight:normal; }
+.material-symbols-rounded { font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24; }
+a { text-decoration:none; color:inherit; cursor:pointer; }
+
+/* Pages */
+.page { display:none; min-height:100vh; flex-direction:column; }
+.page.active { display:flex; }
+
+/* Navbar */
+.navbar { display:flex; align-items:center; justify-content:space-between; height:72px; padding:0 48px; background:var(--bg-white); border-bottom:1px solid var(--border-default); position:sticky; top:0; z-index:100; }
+.nav-left { display:flex; align-items:center; gap:32px; }
+.nav-logo { font-family:'DM Serif Display',serif; font-size:26px; color:var(--accent-terracotta); cursor:pointer; }
+.nav-links { display:flex; gap:24px; }
+.nav-links a { font-size:15px; font-weight:600; color:var(--text-secondary); transition:color .2s; }
+.nav-links a:hover, .nav-links a.active { color:var(--text-primary); }
+.nav-right { display:flex; align-items:center; gap:20px; }
+.nav-right .material-symbols-rounded { font-size:24px; cursor:pointer; transition:color .2s; }
+.nav-right .material-symbols-rounded:hover { color:var(--accent-terracotta); }
+.nav-icon-cart { color:var(--accent-terracotta) !important; }
+
+/* Buttons */
+.btn { display:inline-flex; align-items:center; justify-content:center; padding:14px 32px; border-radius:var(--radius-button); font-family:'Nunito',sans-serif; font-size:16px; font-weight:700; border:none; cursor:pointer; transition:all .2s; }
+.btn-primary { background:var(--accent-terracotta); color:var(--text-white); }
+.btn-primary:hover { background:var(--accent-terracotta-hover); transform:scale(1.02); }
+.btn-secondary { background:var(--bg-card); color:var(--text-primary); }
+.btn-secondary:hover { background:var(--border-default); }
+.btn-success { background:var(--accent-olive); color:var(--text-white); }
+.btn-sm { padding:10px 20px; font-size:13px; }
+.btn-full { width:100%; }
+.btn-white { background:var(--bg-white); }
+
+/* Cards */
+.product-card { background:var(--bg-white); border-radius:var(--radius-card); overflow:hidden; box-shadow:0 3px 12px var(--shadow-color); transition:transform .2s, box-shadow .2s; cursor:pointer; }
+.product-card:hover { transform:translateY(-4px); box-shadow:0 8px 24px var(--shadow-color); }
+.product-card img { width:100%; height:200px; object-fit:cover; }
+.product-card .card-body { padding:20px; display:flex; flex-direction:column; gap:12px; }
+.product-card .card-category { font-size:12px; font-weight:700; color:var(--accent-terracotta); letter-spacing:.5px; text-transform:uppercase; }
+.product-card .card-title { font-family:'DM Serif Display',serif; font-size:22px; }
+.product-card .card-desc { font-size:14px; color:var(--text-secondary); line-height:1.5; }
+.product-card .card-footer { display:flex; justify-content:space-between; align-items:center; }
+.product-card .card-price { font-size:18px; font-weight:800; }
+
+/* Sections */
+.section { padding:48px; }
+.section-title { font-size:36px; text-align:center; margin-bottom:8px; }
+.section-subtitle { font-size:16px; color:var(--text-secondary); text-align:center; margin-bottom:32px; }
+
+/* Grid */
+.grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:24px; }
+.grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+.grid-2 { display:grid; grid-template-columns:repeat(2,1fr); gap:24px; }
+
+/* Footer */
+.footer { background:var(--text-primary); padding:48px 48px 32px; color:var(--text-muted); }
+.footer-top { display:flex; justify-content:space-between; margin-bottom:40px; }
+.footer-col { display:flex; flex-direction:column; gap:12px; }
+.footer-col h4 { color:var(--bg-card); font-family:'Nunito',sans-serif; font-size:14px; font-weight:700; }
+.footer-col a, .footer-col p { font-size:13px; color:var(--text-muted); }
+.footer-col a:hover { color:var(--bg-card); }
+.footer-logo { font-family:'DM Serif Display',serif; font-size:24px; color:var(--bg-card); margin-bottom:8px; }
+.footer-divider { height:1px; background:#5A4A42; margin-bottom:24px; }
+.footer-bottom { font-size:12px; }
+
+/* ====== PAGE: HOME ====== */
+.hero { display:flex; align-items:center; padding:0 48px; height:520px; gap:48px; background:linear-gradient(180deg,#FDF8F0,#F5E6D8); }
+.hero-left { flex:1; display:flex; flex-direction:column; gap:24px; }
+.hero-tag { display:inline-flex; padding:6px 16px; border-radius:20px; background:var(--accent-olive-light); font-size:13px; font-weight:700; color:var(--accent-olive); width:fit-content; }
+.hero-title { font-size:48px; line-height:1.15; }
+.hero-desc { font-size:18px; color:var(--text-secondary); line-height:1.6; max-width:560px; }
+.hero-btns { display:flex; gap:16px; }
+.hero-right { width:480px; height:420px; border-radius:16px; overflow:hidden; flex-shrink:0; }
+.hero-right img { width:100%; height:100%; object-fit:cover; }
+
+/* Category Bar */
+.category-bar { display:flex; justify-content:center; gap:16px; padding:20px 48px; background:var(--bg-white); border-bottom:1px solid var(--border-default); flex-wrap:wrap; }
+.cat-pill { display:flex; align-items:center; gap:8px; padding:10px 20px; border-radius:20px; background:var(--bg-card); font-size:13px; font-weight:700; cursor:pointer; transition:all .2s; }
+.cat-pill:hover, .cat-pill.active { background:var(--accent-terracotta); color:var(--text-white); }
+.cat-pill.active .material-symbols-rounded, .cat-pill:hover .material-symbols-rounded { color:var(--text-white); }
+.cat-pill .material-symbols-rounded { font-size:18px; }
+
+/* Promo */
+.promo-section { display:flex; gap:24px; padding:0 48px; }
+.promo-banner { flex:1; padding:32px; border-radius:var(--radius-card); display:flex; flex-direction:column; justify-content:center; gap:16px; min-height:280px; }
+.promo-banner.terracotta { background:linear-gradient(135deg,#C67B5C,#D4956E); }
+.promo-banner.olive { background:linear-gradient(135deg,#7A8B6F,#96A88A); }
+.promo-tag { font-size:12px; font-weight:700; color:rgba(255,255,255,.6); letter-spacing:1px; }
+.promo-title { font-size:28px; color:var(--text-white); line-height:1.2; }
+.promo-price { font-size:16px; font-weight:700; color:var(--text-white); }
+.promo-desc { font-size:16px; color:rgba(255,255,255,.8); }
+
+/* Trust */
+.trust-section { display:flex; justify-content:space-around; padding:40px 48px; background:var(--bg-white); gap:32px; }
+.trust-item { display:flex; flex-direction:column; align-items:center; gap:12px; text-align:center; }
+.trust-item .material-symbols-rounded { font-size:36px; color:var(--accent-terracotta); }
+.trust-item h4 { font-family:'Nunito',sans-serif; font-size:15px; font-weight:700; }
+.trust-item p { font-size:13px; color:var(--text-secondary); line-height:1.5; max-width:200px; }
+
+/* Newsletter */
+.newsletter { display:flex; flex-direction:column; align-items:center; gap:20px; padding:48px 200px; background:var(--bg-card); text-align:center; }
+.newsletter h2 { font-size:28px; }
+.newsletter p { font-size:15px; color:var(--text-secondary); line-height:1.6; max-width:500px; }
+.nl-form { display:flex; gap:12px; }
+.nl-input { padding:14px 20px; border-radius:var(--radius-button); border:1px solid var(--border-default); background:var(--bg-white); font-family:'Nunito',sans-serif; font-size:15px; width:340px; outline:none; }
+.nl-input:focus { border-color:var(--accent-terracotta); }
+
+/* ====== PAGE: CATALOG ====== */
+.breadcrumb { display:flex; gap:8px; padding:16px 48px; font-size:13px; align-items:center; }
+.breadcrumb a { color:var(--accent-terracotta); }
+.breadcrumb span { color:var(--text-muted); }
+.breadcrumb strong { font-weight:600; }
+
+.catalog-content { display:flex; gap:32px; padding:24px 48px 48px; }
+.sidebar { width:260px; flex-shrink:0; display:flex; flex-direction:column; gap:24px; }
+.sidebar h3 { font-size:22px; }
+.filter-group { display:flex; flex-direction:column; gap:12px; }
+.filter-group h4 { font-family:'Nunito',sans-serif; font-size:14px; font-weight:700; }
+.filter-item { display:flex; align-items:center; gap:10px; cursor:pointer; }
+.checkbox { width:20px; height:20px; border-radius:4px; border:1.5px solid var(--border-strong); background:var(--bg-white); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.checkbox.checked { background:var(--accent-terracotta); border-color:var(--accent-terracotta); }
+.checkbox.checked .material-symbols-rounded { font-size:16px; color:var(--text-white); }
+.filter-item span { font-size:14px; }
+.filter-item.active span { font-weight:600; }
+.filter-divider { height:1px; background:var(--border-default); }
+.filter-select { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; border-radius:var(--radius-input); border:1px solid var(--border-default); background:var(--bg-white); font-size:14px; cursor:pointer; }
+
+.catalog-main { flex:1; display:flex; flex-direction:column; gap:24px; }
+.catalog-header { display:flex; justify-content:space-between; align-items:center; }
+.catalog-header h2 { font-size:28px; }
+.catalog-header span { font-size:14px; color:var(--text-secondary); }
+
+/* ====== PAGE: PRODUCT ====== */
+.product-main { display:flex; gap:48px; padding:24px 48px 48px; }
+.product-images { width:500px; flex-shrink:0; display:flex; flex-direction:column; gap:16px; }
+.product-main-img { width:100%; height:600px; border-radius:var(--radius-card); overflow:hidden; }
+.product-main-img img { width:100%; height:100%; object-fit:cover; }
+.product-thumbs { display:flex; gap:12px; }
+.product-thumbs img { width:80px; height:100px; border-radius:8px; object-fit:cover; cursor:pointer; border:2px solid transparent; transition:border-color .2s; }
+.product-thumbs img.active, .product-thumbs img:hover { border-color:var(--accent-terracotta); }
+.product-info { flex:1; display:flex; flex-direction:column; gap:24px; }
+.product-info .category { font-size:13px; font-weight:700; color:var(--accent-terracotta); letter-spacing:.5px; }
+.product-info h1 { font-size:42px; }
+.product-info .desc { font-size:16px; color:var(--text-secondary); line-height:1.6; }
+.divider { height:1px; background:var(--border-default); }
+
+.price-options { display:flex; flex-direction:column; gap:10px; }
+.price-option { display:flex; justify-content:space-between; align-items:center; padding:16px 20px; border-radius:var(--radius-input); border:1px solid var(--border-default); background:var(--bg-white); cursor:pointer; transition:all .2s; }
+.price-option:hover { border-color:var(--accent-terracotta); }
+.price-option.selected { border:2px solid var(--accent-terracotta); background:#FDF2EB; }
+.price-option .left { display:flex; align-items:center; gap:12px; }
+.radio { width:20px; height:20px; border-radius:50%; border:1.5px solid var(--border-strong); background:var(--bg-white); flex-shrink:0; }
+.price-option.selected .radio { border:6px solid var(--accent-terracotta); background:var(--accent-terracotta); }
+.badge { padding:4px 10px; border-radius:12px; font-size:11px; font-weight:700; color:var(--text-white); }
+.badge-olive { background:var(--accent-olive); }
+.badge-terracotta { background:var(--accent-terracotta); }
+.price-option .price { font-size:14px; font-weight:700; }
+.price-option.selected .price { color:var(--accent-terracotta); }
+
+.bundle-card { padding:20px; border-radius:var(--radius-card); background:#FDF2EB; border:1px solid var(--accent-terracotta); display:flex; align-items:center; gap:16px; }
+.bundle-info { flex:1; display:flex; flex-direction:column; gap:8px; }
+.bundle-info h4 { font-family:'Nunito',sans-serif; font-size:16px; font-weight:700; }
+.bundle-info p { font-size:14px; color:var(--text-secondary); line-height:1.5; }
+.bundle-prices { display:flex; gap:12px; align-items:center; }
+.bundle-prices .old { font-size:14px; color:var(--text-muted); text-decoration:line-through; }
+.bundle-prices .new { font-size:18px; font-weight:800; color:var(--accent-terracotta); }
+
+/* ====== PAGE: CART ====== */
+.cart-header { display:flex; justify-content:space-between; align-items:center; padding:32px 48px 0; }
+.cart-header h1 { font-size:36px; }
+.cart-header span { font-size:16px; color:var(--text-secondary); }
+.cart-body { display:flex; gap:32px; padding:24px 48px 48px; }
+.cart-items { flex:1; display:flex; flex-direction:column; gap:16px; }
+.cart-item { display:flex; gap:20px; padding:20px; border-radius:var(--radius-card); background:var(--bg-white); align-items:center; }
+.cart-item img { width:100px; height:130px; border-radius:8px; object-fit:cover; }
+.cart-item-info { flex:1; display:flex; flex-direction:column; gap:8px; }
+.cart-item-info h3 { font-size:20px; }
+.cart-item-info .details { font-size:14px; color:var(--text-secondary); }
+.cart-item-info .start { font-size:13px; color:var(--text-muted); }
+.cart-item-right { display:flex; flex-direction:column; align-items:flex-end; gap:8px; }
+.cart-item-right .price { font-size:18px; font-weight:800; }
+.cart-item-right .monthly { font-size:13px; color:var(--text-secondary); }
+.cart-item-right .remove { font-size:13px; font-weight:600; color:var(--error); cursor:pointer; }
+.cart-item-right .remove:hover { text-decoration:underline; }
+
+.cart-summary { width:400px; padding:24px; border-radius:var(--radius-card); background:var(--bg-white); box-shadow:0 2px 12px var(--shadow-color); display:flex; flex-direction:column; gap:20px; height:fit-content; position:sticky; top:96px; }
+.cart-summary h3 { font-size:22px; }
+.summary-row { display:flex; justify-content:space-between; }
+.summary-row .label { font-size:14px; color:var(--text-secondary); }
+.summary-row .value { font-size:14px; font-weight:600; }
+.summary-row .value.green { color:var(--accent-olive); }
+.coupon-row { display:flex; gap:10px; }
+.coupon-input { flex:1; padding:12px 16px; border-radius:var(--radius-input); border:1px solid var(--border-default); background:var(--bg-primary); font-family:'Nunito',sans-serif; font-size:14px; outline:none; }
+.coupon-btn { padding:12px 20px; border-radius:var(--radius-input); background:var(--bg-card); border:none; font-family:'Nunito',sans-serif; font-size:14px; font-weight:700; cursor:pointer; }
+.total-row { display:flex; justify-content:space-between; align-items:center; }
+.total-row .label { font-size:18px; font-weight:700; }
+.total-row .value { font-size:22px; font-weight:800; color:var(--accent-terracotta); }
+
+/* ====== PAGE: CHECKOUT ====== */
+.steps-bar { display:flex; justify-content:center; align-items:center; padding:24px 200px; background:var(--bg-white); gap:0; }
+.step { display:flex; align-items:center; gap:8px; padding:12px 20px; }
+.step-num { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; }
+.step-num.done { background:var(--accent-olive); color:var(--text-white); }
+.step-num.current { background:var(--accent-terracotta); color:var(--text-white); }
+.step-num.upcoming { background:var(--bg-white); border:1.5px solid var(--border-default); color:var(--text-muted); }
+.step-text { font-size:13px; }
+.step-text.done { font-weight:600; color:var(--accent-olive); }
+.step-text.current { font-weight:700; color:var(--accent-terracotta); }
+.step-text.upcoming { color:var(--text-muted); }
+.step-line { width:60px; height:2px; }
+.step-line.done { background:var(--accent-olive); }
+.step-line.upcoming { background:var(--border-default); }
+
+.checkout-body { display:flex; gap:32px; padding:32px 48px; }
+.checkout-form { flex:1; padding:32px; border-radius:var(--radius-card); background:var(--bg-white); display:flex; flex-direction:column; gap:24px; }
+.checkout-form h2 { font-size:24px; }
+.ship-modes { display:flex; gap:12px; }
+.ship-mode { flex:1; display:flex; flex-direction:column; align-items:center; gap:8px; padding:16px 12px; border-radius:var(--radius-input); border:1px solid var(--border-default); cursor:pointer; transition:all .2s; }
+.ship-mode:hover { border-color:var(--accent-terracotta); }
+.ship-mode.active { background:#FDF2EB; border:2px solid var(--accent-terracotta); }
+.ship-mode.active .material-symbols-rounded { color:var(--accent-terracotta); }
+.ship-mode.active span { color:var(--accent-terracotta); font-weight:700; }
+.ship-mode .material-symbols-rounded { font-size:24px; color:var(--text-secondary); }
+.ship-mode span { font-size:13px; color:var(--text-secondary); }
+.form-row { display:flex; gap:16px; }
+.form-field { flex:1; display:flex; flex-direction:column; gap:6px; }
+.form-field label { font-size:13px; font-weight:600; }
+.form-field input, .form-field select { padding:12px 16px; border-radius:var(--radius-input); border:1px solid var(--border-default); background:var(--bg-white); font-family:'Nunito',sans-serif; font-size:14px; outline:none; }
+.form-field input:focus { border-color:var(--accent-terracotta); }
+.form-btns { display:flex; justify-content:space-between; margin-top:8px; }
+
+.order-summary { width:380px; padding:24px; border-radius:var(--radius-card); background:var(--bg-white); box-shadow:0 2px 12px var(--shadow-color); display:flex; flex-direction:column; gap:16px; height:fit-content; position:sticky; top:96px; }
+.order-summary h3 { font-size:20px; }
+
+/* ====== PAGE: ACCOUNT ====== */
+.account-body { display:flex; gap:32px; padding:32px 48px; }
+.account-sidebar { width:260px; flex-shrink:0; padding:16px; border-radius:var(--radius-card); background:var(--bg-white); display:flex; flex-direction:column; gap:4px; height:fit-content; }
+.acc-menu-item { display:flex; align-items:center; gap:12px; padding:12px 16px; border-radius:8px; font-size:14px; cursor:pointer; transition:all .2s; }
+.acc-menu-item:hover { background:var(--bg-card); }
+.acc-menu-item.active { background:var(--accent-terracotta); color:var(--text-white); font-weight:700; }
+.acc-menu-item.active .material-symbols-rounded { color:var(--text-white); }
+.acc-menu-item .material-symbols-rounded { font-size:20px; color:var(--text-secondary); }
+
+.account-main { flex:1; display:flex; flex-direction:column; gap:24px; }
+.welcome-card { display:flex; justify-content:space-between; align-items:center; padding:24px; border-radius:var(--radius-card); background:linear-gradient(135deg,#C67B5C,#D4956E); }
+.welcome-card h2 { font-size:24px; color:var(--text-white); }
+.welcome-card p { font-size:14px; color:rgba(255,255,255,.8); margin-top:8px; }
+.stats-row { display:flex; gap:16px; }
+.stat-card { flex:1; padding:20px; border-radius:var(--radius-card); background:var(--bg-white); display:flex; flex-direction:column; gap:8px; }
+.stat-card .stat-label { font-size:13px; font-weight:600; color:var(--text-secondary); }
+.stat-card .stat-value { font-size:32px; }
+.stat-card .stat-value.terracotta { color:var(--accent-terracotta); }
+.stat-card .stat-value-sm { font-size:24px; }
+
+.sub-card { display:flex; gap:16px; padding:20px; border-radius:var(--radius-card); background:var(--bg-white); align-items:center; }
+.sub-card img { width:70px; height:90px; border-radius:8px; object-fit:cover; }
+.sub-card-info { flex:1; display:flex; flex-direction:column; gap:4px; }
+.sub-card-info h3 { font-size:18px; }
+.sub-card-info .details { font-size:13px; color:var(--text-secondary); }
+.sub-status { display:flex; align-items:center; gap:6px; font-size:12px; font-weight:600; color:var(--accent-olive); }
+.sub-status .dot { width:8px; height:8px; border-radius:50%; background:var(--accent-olive); }
+
+.order-card { padding:20px; border-radius:var(--radius-card); background:var(--bg-white); display:flex; flex-direction:column; gap:12px; }
+.order-row { display:flex; justify-content:space-between; }
+.order-row .num { font-size:14px; font-weight:700; }
+.order-row .date { font-size:14px; color:var(--text-secondary); }
+.order-row .items { font-size:14px; color:var(--text-secondary); }
+.order-row .total { font-size:14px; font-weight:700; }
+</style>
+</head>
+<body>
+
+<!-- ====== PAGE 1: NYITÓOLDAL ====== -->
+<div class="page active" id="page-home">
+  <nav class="navbar">
+    <div class="nav-left">
+      <div class="nav-logo" onclick="showPage('home')">lapot.hu</div>
+      <div class="nav-links">
+        <a class="active" onclick="showPage('catalog')">Előfizetések</a>
+        <a onclick="showPage('catalog')">Digitális</a>
+        <a onclick="showPage('catalog')">Akciók</a>
+        <a onclick="showPage('catalog')">Csomagok</a>
+      </div>
+    </div>
+    <div class="nav-right">
+      <span class="material-symbols-rounded">search</span>
+      <span class="material-symbols-rounded nav-icon-cart" onclick="showPage('cart')">shopping_cart</span>
+      <span class="material-symbols-rounded" onclick="showPage('account')">person</span>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-left">
+      <div class="hero-tag">Tavaszi akció – 30% kedvezmény!</div>
+      <h1 class="hero-title">Kedvenc magazinjaid,<br>egy helyen.</h1>
+      <p class="hero-desc">Válogass több mint 20 nyomtatott és digitális lap közül. Fizess egyszerűen, és élvezd az olvasást – akár a kanapéról.</p>
+      <div class="hero-btns">
+        <button class="btn btn-primary" onclick="showPage('catalog')">Böngéssz az ajánlatok közt</button>
+        <button class="btn btn-secondary" onclick="showPage('catalog')">Akciók megtekintése</button>
+      </div>
+    </div>
+    <div class="hero-right">
+      <img src="./images/generated-1773918348146.png" alt="Magazinok">
+    </div>
+  </div>
+
+  <div class="category-bar">
+    <div class="cat-pill active"><span class="material-symbols-rounded">newspaper</span> Hírlapok</div>
+    <div class="cat-pill" onclick="showPage('catalog')"><span class="material-symbols-rounded">auto_stories</span> Női magazinok</div>
+    <div class="cat-pill"><span class="material-symbols-rounded">tv</span> TV-műsor</div>
+    <div class="cat-pill"><span class="material-symbols-rounded">restaurant</span> Gasztro</div>
+    <div class="cat-pill"><span class="material-symbols-rounded">directions_car</span> Autós</div>
+    <div class="cat-pill"><span class="material-symbols-rounded">favorite</span> Romantika</div>
+    <div class="cat-pill"><span class="material-symbols-rounded">devices</span> Digitális</div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Kiemelt előfizetések</h2>
+    <p class="section-subtitle">A legkedveltebb lapjaink, most akciós áron</p>
+    <div class="grid-4">
+      <div class="product-card" onclick="showPage('product')">
+        <img src="https://images.unsplash.com/photo-1692297226269-4946e186ef89?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400" alt="Blikk">
+        <div class="card-body">
+          <div class="card-category">Hírlap · Napi</div>
+          <div class="card-title">Blikk</div>
+          <div class="card-desc">Magyarország legnépszerűbb napilapja, minden nap friss hírekkel.</div>
+          <div class="card-footer">
+            <div class="card-price">8 950 Ft/hó</div>
+            <button class="btn btn-primary btn-sm">Előfizetek</button>
+          </div>
+        </div>
+      </div>
+      <div class="product-card" onclick="showPage('product')">
+        <img src="https://images.unsplash.com/photo-1772698262765-7d4add14b34e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400" alt="Glamour">
+        <div class="card-body">
+          <div class="card-category">Női magazin · Havi</div>
+          <div class="card-title">Glamour</div>
+          <div class="card-desc">Divat, szépség és életstílus – minden hónapban inspiráció.</div>
+          <div class="card-footer">
+            <div class="card-price">2 490 Ft/hó</div>
+            <button class="btn btn-primary btn-sm">Előfizetek</button>
+          </div>
+        </div>
+      </div>
+      <div class="product-card" onclick="showPage('product')">
+        <img src="https://images.unsplash.com/photo-1665272475970-ea2ac5c28521?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400" alt="TVR-Hét">
+        <div class="card-body">
+          <div class="card-category">TV-műsor · Heti</div>
+          <div class="card-title">TVR-Hét</div>
+          <div class="card-desc">A hét teljes TV-műsora és a kedvenc sorozataid háttértörténetei.</div>
+          <div class="card-footer">
+            <div class="card-price">1 290 Ft/hó</div>
+            <button class="btn btn-primary btn-sm">Előfizetek</button>
+          </div>
+        </div>
+      </div>
+      <div class="product-card" onclick="showPage('product')">
+        <img src="https://images.unsplash.com/photo-1772038033342-43dbd4e14274?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400" alt="Kiskegyed">
+        <div class="card-body">
+          <div class="card-category">Gasztro · Havi</div>
+          <div class="card-title">Kiskegyed</div>
+          <div class="card-desc">Receptek, háztartási tippek és családi programok magazinja.</div>
+          <div class="card-footer">
+            <div class="card-price">1 890 Ft/hó</div>
+            <button class="btn btn-primary btn-sm">Előfizetek</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="promo-section">
+    <div class="promo-banner terracotta">
+      <div class="promo-tag">Limitált akció</div>
+      <h2 class="promo-title">Blikk + Glamour<br>csomagban olcsóbb!</h2>
+      <div class="promo-price">9 990 Ft/hó helyett 7 990 Ft/hó</div>
+      <button class="btn btn-white btn-sm" style="width:fit-content;color:var(--accent-terracotta);" onclick="showPage('product')">Csomagot kérek</button>
+    </div>
+    <div class="promo-banner olive">
+      <div class="promo-tag">Digitális újdonság</div>
+      <h2 class="promo-title">Digitális előfizetés<br>– olvasd bárhol!</h2>
+      <div class="promo-desc">Tabletről, telefonról, laptopról – azonnal elérhető.</div>
+      <button class="btn btn-white btn-sm" style="width:fit-content;color:var(--accent-olive);" onclick="showPage('catalog')">Digitális ajánlatok</button>
+    </div>
+  </div>
+
+  <div class="trust-section">
+    <div class="trust-item"><span class="material-symbols-rounded">local_shipping</span><h4>Ingyenes szállítás</h4><p>10 000 Ft felett ingyenes házhozszállítás</p></div>
+    <div class="trust-item"><span class="material-symbols-rounded">verified</span><h4>Biztonságos fizetés</h4><p>SimplePay és PayPal bankkártyás fizetés</p></div>
+    <div class="trust-item"><span class="material-symbols-rounded">support_agent</span><h4>Ügyfélszolgálat</h4><p>Hétfőtől péntekig 9:00 – 17:00</p></div>
+    <div class="trust-item"><span class="material-symbols-rounded">autorenew</span><h4>Automatikus hosszabbítás</h4><p>Kényelmes megújítás, bármikor lemondható</p></div>
+  </div>
+
+  <div class="newsletter">
+    <h2>Iratkozz fel hírlevelünkre!</h2>
+    <p>Értesülj elsőként az akciókról és új előfizetési ajánlatokról. Feliratkozásért 10% kedvezményt adunk!</p>
+    <div class="nl-form">
+      <input class="nl-input" placeholder="E-mail-címed" type="email">
+      <button class="btn btn-primary">Feliratkozom</button>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="footer-col"><div class="footer-logo">lapot.hu</div><p>Előfizetések egy helyen.<br>Indamedia csoport.</p></div>
+      <div class="footer-col"><h4>Előfizetések</h4><a>Hírlapok</a><a>Női magazinok</a><a>Digitális lapok</a></div>
+      <div class="footer-col"><h4>Információ</h4><a>ÁSZF</a><a>Adatvédelem</a><a>Kapcsolat</a></div>
+      <div class="footer-col"><h4>Ügyfélszolgálat</h4><a>+36 1 999 0000</a><a>info@lapot.hu</a></div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">© 2026 Indamedia Group. Minden jog fenntartva.</div>
+  </footer>
+</div>
+
+<!-- ====== PAGE 2: KATALÓGUS ====== -->
+<div class="page" id="page-catalog">
+  <nav class="navbar">
+    <div class="nav-left">
+      <div class="nav-logo" onclick="showPage('home')">lapot.hu</div>
+      <div class="nav-links">
+        <a class="active">Előfizetések</a>
+        <a>Digitális</a>
+        <a>Akciók</a>
+        <a>Csomagok</a>
+      </div>
+    </div>
+    <div class="nav-right">
+      <span class="material-symbols-rounded">search</span>
+      <span class="material-symbols-rounded nav-icon-cart" onclick="showPage('cart')">shopping_cart</span>
+      <span class="material-symbols-rounded" onclick="showPage('account')">person</span>
+    </div>
+  </nav>
+
+  <div class="breadcrumb"><a onclick="showPage('home')">Kezdőlap</a><span>/</span><strong>Előfizetések</strong></div>
+
+  <div class="catalog-content">
+    <div class="sidebar">
+      <h3>Szűrők</h3>
+      <div class="filter-group">
+        <h4>Kategória</h4>
+        <div class="filter-item"><div class="checkbox"></div><span>Hírlapok (5)</span></div>
+        <div class="filter-item active"><div class="checkbox checked"><span class="material-symbols-rounded">check</span></div><span>Női magazinok (8)</span></div>
+        <div class="filter-item"><div class="checkbox"></div><span>TV-műsor (3)</span></div>
+        <div class="filter-item"><div class="checkbox"></div><span>Gasztro (4)</span></div>
+      </div>
+      <div class="filter-group">
+        <h4>Formátum</h4>
+        <div class="filter-item"><div class="checkbox"></div><span>Nyomtatott</span></div>
+        <div class="filter-item"><div class="checkbox"></div><span>Digitális</span></div>
+        <div class="filter-item"><div class="checkbox"></div><span>Kombinált</span></div>
+      </div>
+      <div class="filter-divider"></div>
+      <div class="filter-group">
+        <h4>Rendezés</h4>
+        <div class="filter-select"><span>Népszerűség szerint</span><span class="material-symbols-rounded" style="font-size:20px">keyboard_arrow_down</span></div>
+      </div>
+    </div>
+
+    <div class="catalog-main">
+      <div class="catalog-header"><h2>Női magazinok</h2><span>8 termék</span></div>
+      <div class="grid-3">
+        <div class="product-card" onclick="showPage('product')"><img src="https://images.unsplash.com/photo-1772698262765-7d4add14b34e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400"><div class="card-body"><div class="card-category">Női magazin · Havi</div><div class="card-title">Glamour</div><div class="card-desc">Divat, szépség és életstílus magazin.</div><div class="card-footer"><div class="card-price">2 490 Ft/hó</div><button class="btn btn-primary btn-sm">Előfizetek</button></div></div></div>
+        <div class="product-card" onclick="showPage('product')"><img src="https://images.unsplash.com/photo-1772038033342-43dbd4e14274?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400"><div class="card-body"><div class="card-category">Női magazin · Havi</div><div class="card-title">Kiskegyed</div><div class="card-desc">Receptek, háztartási tippek, családi programok.</div><div class="card-footer"><div class="card-price">1 890 Ft/hó</div><button class="btn btn-primary btn-sm">Előfizetek</button></div></div></div>
+        <div class="product-card" onclick="showPage('product')"><img src="https://images.unsplash.com/photo-1633456217586-44904acf9556?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400"><div class="card-body"><div class="card-category">Női magazin · Kétheti</div><div class="card-title">Nők Lapja</div><div class="card-desc">A magyar nők kedvenc magazinja több mint 70 éve.</div><div class="card-footer"><div class="card-price">1 690 Ft/hó</div><button class="btn btn-primary btn-sm">Előfizetek</button></div></div></div>
+        <div class="product-card" onclick="showPage('product')"><img src="https://images.unsplash.com/photo-1767439566443-005566bc22cf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400"><div class="card-body"><div class="card-category">Női magazin · Havi</div><div class="card-title">Elle</div><div class="card-desc">Nemzetközi divat és kultúra, helyi szemmel.</div><div class="card-footer"><div class="card-price">2 990 Ft/hó</div><button class="btn btn-primary btn-sm">Előfizetek</button></div></div></div>
+        <div class="product-card" onclick="showPage('product')"><img src="https://images.unsplash.com/photo-1713056515048-e6487ed2bc5d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400"><div class="card-body"><div class="card-category">Romantika · Havi</div><div class="card-title">Tina</div><div class="card-desc">Romantikus történetek és szórakoztató olvasmány.</div><div class="card-footer"><div class="card-price">990 Ft/hó</div><button class="btn btn-primary btn-sm">Előfizetek</button></div></div></div>
+        <div class="product-card" onclick="showPage('product')"><img src="https://images.unsplash.com/photo-1700462246330-911562ebd109?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400"><div class="card-body"><div class="card-category">Női magazin · Havi</div><div class="card-title">Joy</div><div class="card-desc">Fiatalos életstílus, trendek és inspiráció.</div><div class="card-footer"><div class="card-price">1 990 Ft/hó</div><button class="btn btn-primary btn-sm">Előfizetek</button></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="footer-col"><div class="footer-logo">lapot.hu</div><p>Előfizetések egy helyen.<br>Indamedia csoport.</p></div>
+      <div class="footer-col"><h4>Előfizetések</h4><a>Hírlapok</a><a>Női magazinok</a><a>Digitális lapok</a></div>
+      <div class="footer-col"><h4>Információ</h4><a>ÁSZF</a><a>Adatvédelem</a><a>Kapcsolat</a></div>
+      <div class="footer-col"><h4>Ügyfélszolgálat</h4><a>+36 1 999 0000</a><a>info@lapot.hu</a></div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">© 2026 Indamedia Group. Minden jog fenntartva.</div>
+  </footer>
+</div>
+
+<!-- ====== PAGE 3: TERMÉKOLDAL ====== -->
+<div class="page" id="page-product">
+  <nav class="navbar">
+    <div class="nav-left">
+      <div class="nav-logo" onclick="showPage('home')">lapot.hu</div>
+      <div class="nav-links">
+        <a class="active" onclick="showPage('catalog')">Előfizetések</a>
+        <a>Digitális</a>
+        <a>Akciók</a>
+        <a>Csomagok</a>
+      </div>
+    </div>
+    <div class="nav-right">
+      <span class="material-symbols-rounded">search</span>
+      <span class="material-symbols-rounded nav-icon-cart" onclick="showPage('cart')">shopping_cart</span>
+      <span class="material-symbols-rounded" onclick="showPage('account')">person</span>
+    </div>
+  </nav>
+
+  <div class="breadcrumb"><a onclick="showPage('home')">Kezdőlap</a><span>/</span><a onclick="showPage('catalog')">Női magazinok</a><span>/</span><strong>Glamour</strong></div>
+
+  <div class="product-main">
+    <div class="product-images">
+      <div class="product-main-img"><img src="https://images.unsplash.com/photo-1561357747-a5ebd644c2d6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600" alt="Glamour"></div>
+      <div class="product-thumbs">
+        <img src="https://images.unsplash.com/photo-1656568757581-5beb95f29291?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=100" class="active">
+        <img src="https://images.unsplash.com/photo-1768424489291-949f3f2b12ae?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=100">
+        <img src="https://images.unsplash.com/photo-1677170044570-d3195958a67e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=100">
+      </div>
+    </div>
+    <div class="product-info">
+      <div class="category">Női magazin · Havi · Nyomtatott</div>
+      <h1>Glamour</h1>
+      <p class="desc">A Glamour Magyarország vezető divat- és szépségmagazinja. Minden hónapban inspiráció, trendek, sztárinterjúk, szépségápolási tippek és életstílus tartalmak. Ideális ajándék magadnak vagy szeretteidnek.</p>
+      <div class="divider"></div>
+      <h4 style="font-family:'Nunito';font-weight:700;font-size:15px;">Válassz időtartamot:</h4>
+      <div class="price-options">
+        <div class="price-option" onclick="selectOption(this)">
+          <div class="left"><div class="radio"></div><span>3 hónapos előfizetés</span></div>
+          <div class="price">7 470 Ft (2 490 Ft/hó)</div>
+        </div>
+        <div class="price-option selected" onclick="selectOption(this)">
+          <div class="left"><div class="radio"></div><span style="font-weight:600">6 hónapos előfizetés</span><span class="badge badge-olive">Népszerű</span></div>
+          <div class="price">13 140 Ft (2 190 Ft/hó)</div>
+        </div>
+        <div class="price-option" onclick="selectOption(this)">
+          <div class="left"><div class="radio"></div><span>12 hónapos előfizetés</span><span class="badge badge-terracotta">−20%</span></div>
+          <div class="price">23 900 Ft (1 992 Ft/hó)</div>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="showPage('cart')">Kosárba teszem – 13 140 Ft</button>
+      <div class="divider"></div>
+      <h3 style="font-size:22px">Csomagajánlat – spórolj többet!</h3>
+      <div class="bundle-card">
+        <div class="bundle-info">
+          <h4>Glamour + Kiskegyed csomag</h4>
+          <p>Két kedvenc magazin együtt, havonta 600 Ft megtakarítással!</p>
+          <div class="bundle-prices"><span class="old">4 380 Ft/hó</span><span class="new">3 780 Ft/hó</span></div>
+        </div>
+        <button class="btn btn-primary" onclick="showPage('cart')">Csomagot kérek</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="footer-col"><div class="footer-logo">lapot.hu</div><p>Előfizetések egy helyen.<br>Indamedia csoport.</p></div>
+      <div class="footer-col"><h4>Előfizetések</h4><a>Hírlapok</a><a>Női magazinok</a><a>Digitális lapok</a></div>
+      <div class="footer-col"><h4>Információ</h4><a>ÁSZF</a><a>Adatvédelem</a><a>Kapcsolat</a></div>
+      <div class="footer-col"><h4>Ügyfélszolgálat</h4><a>+36 1 999 0000</a><a>info@lapot.hu</a></div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">© 2026 Indamedia Group. Minden jog fenntartva.</div>
+  </footer>
+</div>
+
+<!-- ====== PAGE 4: KOSÁR ====== -->
+<div class="page" id="page-cart">
+  <nav class="navbar">
+    <div class="nav-left">
+      <div class="nav-logo" onclick="showPage('home')">lapot.hu</div>
+      <div class="nav-links">
+        <a onclick="showPage('catalog')">Előfizetések</a>
+        <a>Digitális</a>
+        <a>Akciók</a>
+        <a>Csomagok</a>
+      </div>
+    </div>
+    <div class="nav-right">
+      <span class="material-symbols-rounded">search</span>
+      <span class="material-symbols-rounded nav-icon-cart">shopping_cart</span>
+      <span class="material-symbols-rounded" onclick="showPage('account')">person</span>
+    </div>
+  </nav>
+
+  <div class="cart-header"><h1>Kosár</h1><span>2 termék</span></div>
+  <div class="cart-body">
+    <div class="cart-items">
+      <div class="cart-item">
+        <img src="https://images.unsplash.com/photo-1713213200095-28a44f792ba9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=200" alt="Glamour">
+        <div class="cart-item-info"><h3>Glamour</h3><div class="details">6 hónapos előfizetés · Nyomtatott</div><div class="start">Kezdés: 2026. május</div></div>
+        <div class="cart-item-right"><div class="price">13 140 Ft</div><div class="monthly">2 190 Ft/hó</div><div class="remove">Törlés</div></div>
+      </div>
+      <div class="cart-item">
+        <img src="https://images.unsplash.com/photo-1758524151962-00518785b26c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=200" alt="Kiskegyed">
+        <div class="cart-item-info"><h3>Kiskegyed</h3><div class="details">12 hónapos előfizetés · Nyomtatott</div><div class="start">Kezdés: 2026. április</div></div>
+        <div class="cart-item-right"><div class="price">22 680 Ft</div><div class="monthly">1 890 Ft/hó</div><div class="remove">Törlés</div></div>
+      </div>
+    </div>
+    <div class="cart-summary">
+      <h3>Összegzés</h3>
+      <div class="summary-row"><span class="label">Részösszeg</span><span class="value">35 820 Ft</span></div>
+      <div class="summary-row"><span class="label">Szállítás</span><span class="value green">Ingyenes</span></div>
+      <div class="divider"></div>
+      <div class="coupon-row"><input class="coupon-input" placeholder="Kuponkód"><button class="coupon-btn">Beváltás</button></div>
+      <div class="divider"></div>
+      <div class="total-row"><span class="label">Fizetendő</span><span class="value">35 820 Ft</span></div>
+      <button class="btn btn-primary btn-full" onclick="showPage('checkout')">Tovább a fizetéshez</button>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="footer-col"><div class="footer-logo">lapot.hu</div><p>Előfizetések egy helyen.<br>Indamedia csoport.</p></div>
+      <div class="footer-col"><h4>Előfizetések</h4><a>Hírlapok</a><a>Női magazinok</a><a>Digitális lapok</a></div>
+      <div class="footer-col"><h4>Információ</h4><a>ÁSZF</a><a>Adatvédelem</a><a>Kapcsolat</a></div>
+      <div class="footer-col"><h4>Ügyfélszolgálat</h4><a>+36 1 999 0000</a><a>info@lapot.hu</a></div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">© 2026 Indamedia Group. Minden jog fenntartva.</div>
+  </footer>
+</div>
+
+<!-- ====== PAGE 5: CHECKOUT ====== -->
+<div class="page" id="page-checkout">
+  <nav class="navbar">
+    <div class="nav-left">
+      <div class="nav-logo" onclick="showPage('home')">lapot.hu</div>
+      <div class="nav-links">
+        <a onclick="showPage('catalog')">Előfizetések</a>
+        <a>Digitális</a>
+        <a>Akciók</a>
+        <a>Csomagok</a>
+      </div>
+    </div>
+    <div class="nav-right">
+      <span class="material-symbols-rounded">search</span>
+      <span class="material-symbols-rounded nav-icon-cart" onclick="showPage('cart')">shopping_cart</span>
+      <span class="material-symbols-rounded" onclick="showPage('account')">person</span>
+    </div>
+  </nav>
+
+  <div class="steps-bar">
+    <div class="step"><div class="step-num done"><span class="material-symbols-rounded" style="font-size:18px">check</span></div><span class="step-text done">Személyes adatok</span></div>
+    <div class="step-line done"></div>
+    <div class="step"><div class="step-num current">2</div><span class="step-text current">Szállítás</span></div>
+    <div class="step-line upcoming"></div>
+    <div class="step"><div class="step-num upcoming">3</div><span class="step-text upcoming">Fizetés</span></div>
+    <div class="step-line upcoming"></div>
+    <div class="step"><div class="step-num upcoming">4</div><span class="step-text upcoming">Áttekintés</span></div>
+  </div>
+
+  <div class="checkout-body">
+    <div class="checkout-form">
+      <h2>Szállítási adatok</h2>
+      <div class="ship-modes">
+        <div class="ship-mode active" onclick="selectShip(this)"><span class="material-symbols-rounded">local_shipping</span><span>Házhozszállítás</span></div>
+        <div class="ship-mode" onclick="selectShip(this)"><span class="material-symbols-rounded">inventory_2</span><span>Csomagpont</span></div>
+        <div class="ship-mode" onclick="selectShip(this)"><span class="material-symbols-rounded">mail</span><span>Postai</span></div>
+      </div>
+      <div class="form-row">
+        <div class="form-field"><label>Irányítószám</label><input value="1052"></div>
+        <div class="form-field"><label>Település</label><input value="Budapest"></div>
+      </div>
+      <div class="form-field"><label>Utca, házszám</label><input value="Váci utca 12."></div>
+      <div class="form-field"><label>Előfizetés kezdési dátuma</label><input type="text" value="2026. május 1."></div>
+      <div class="filter-item" style="cursor:pointer">
+        <div class="checkbox checked"><span class="material-symbols-rounded">check</span></div>
+        <span style="font-size:14px">A számlázási cím megegyezik a szállítási címmel</span>
+      </div>
+      <div class="form-btns">
+        <button class="btn btn-secondary" onclick="showPage('cart')">Vissza</button>
+        <button class="btn btn-primary">Tovább a fizetéshez</button>
+      </div>
+    </div>
+    <div class="order-summary">
+      <h3>Rendelés</h3>
+      <div class="summary-row"><span class="label">Glamour (6 hó)</span><span class="value">13 140 Ft</span></div>
+      <div class="summary-row"><span class="label">Kiskegyed (12 hó)</span><span class="value">22 680 Ft</span></div>
+      <div class="divider"></div>
+      <div class="summary-row"><span class="label">Szállítás</span><span class="value green">Ingyenes</span></div>
+      <div class="divider"></div>
+      <div class="total-row"><span class="label" style="font-size:16px">Összesen</span><span class="value" style="font-size:20px">35 820 Ft</span></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="footer-col"><div class="footer-logo">lapot.hu</div><p>Előfizetések egy helyen.<br>Indamedia csoport.</p></div>
+      <div class="footer-col"><h4>Előfizetések</h4><a>Hírlapok</a><a>Női magazinok</a><a>Digitális lapok</a></div>
+      <div class="footer-col"><h4>Információ</h4><a>ÁSZF</a><a>Adatvédelem</a><a>Kapcsolat</a></div>
+      <div class="footer-col"><h4>Ügyfélszolgálat</h4><a>+36 1 999 0000</a><a>info@lapot.hu</a></div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">© 2026 Indamedia Group. Minden jog fenntartva.</div>
+  </footer>
+</div>
+
+<!-- ====== PAGE 6: FIÓKOM ====== -->
+<div class="page" id="page-account">
+  <nav class="navbar">
+    <div class="nav-left">
+      <div class="nav-logo" onclick="showPage('home')">lapot.hu</div>
+      <div class="nav-links">
+        <a onclick="showPage('catalog')">Előfizetések</a>
+        <a>Digitális</a>
+        <a>Akciók</a>
+        <a>Csomagok</a>
+      </div>
+    </div>
+    <div class="nav-right">
+      <span class="material-symbols-rounded">search</span>
+      <span class="material-symbols-rounded nav-icon-cart" onclick="showPage('cart')">shopping_cart</span>
+      <span class="material-symbols-rounded">person</span>
+    </div>
+  </nav>
+
+  <div class="account-body">
+    <div class="account-sidebar">
+      <div class="acc-menu-item active"><span class="material-symbols-rounded">dashboard</span>Áttekintés</div>
+      <div class="acc-menu-item"><span class="material-symbols-rounded">subscriptions</span>Előfizetéseim</div>
+      <div class="acc-menu-item"><span class="material-symbols-rounded">receipt_long</span>Rendeléseim</div>
+      <div class="acc-menu-item"><span class="material-symbols-rounded">description</span>Számláim</div>
+      <div class="acc-menu-item"><span class="material-symbols-rounded">person</span>Személyes adatok</div>
+      <div class="acc-menu-item"><span class="material-symbols-rounded">star</span>VIP-pontjaim</div>
+    </div>
+
+    <div class="account-main">
+      <div class="welcome-card">
+        <div><h2>Üdvözlünk, Kovács Anna!</h2><p>2 aktív előfizetésed van · 1 250 VIP-pontod</p></div>
+        <button class="btn btn-secondary" onclick="showPage('catalog')">Új előfizetés</button>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-label">Aktív előfizetések</div><div class="stat-value">2</div></div>
+        <div class="stat-card"><div class="stat-label">VIP-pontok</div><div class="stat-value terracotta">1 250</div></div>
+        <div class="stat-card"><div class="stat-label">Következő lejárat</div><div class="stat-value stat-value-sm">2026. okt. 15.</div></div>
+      </div>
+
+      <h3 style="font-size:22px">Aktív előfizetéseid</h3>
+      <div class="sub-card">
+        <img src="https://images.unsplash.com/photo-1770777352327-5980aa5414ba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=200" alt="Glamour">
+        <div class="sub-card-info">
+          <h3>Glamour</h3>
+          <div class="details">6 hó · Nyomtatott · Érvényes: 2026.10.15-ig</div>
+          <div class="sub-status"><div class="dot"></div>Aktív · Auto. hosszabbítás bekapcsolva</div>
+        </div>
+        <button class="btn btn-secondary btn-sm">Kezelés</button>
+      </div>
+      <div class="sub-card">
+        <img src="https://images.unsplash.com/photo-1767719859358-345d16347a77?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=200" alt="Kiskegyed">
+        <div class="sub-card-info">
+          <h3>Kiskegyed</h3>
+          <div class="details">12 hó · Nyomtatott · Érvényes: 2027.03.20-ig</div>
+          <div class="sub-status"><div class="dot"></div>Aktív · Auto. hosszabbítás bekapcsolva</div>
+        </div>
+        <button class="btn btn-secondary btn-sm">Kezelés</button>
+      </div>
+
+      <h3 style="font-size:22px">Utolsó rendelés</h3>
+      <div class="order-card">
+        <div class="order-row"><span class="num">#ORD-2026-0142</span><span class="date">2026. március 15.</span></div>
+        <div class="order-row"><span class="items">Glamour (6 hó) + Kiskegyed (12 hó)</span><span class="total">35 820 Ft</span></div>
+        <div class="sub-status"><div class="dot"></div>Fizetve · Kézbesítve</div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="footer-col"><div class="footer-logo">lapot.hu</div><p>Előfizetések egy helyen.<br>Indamedia csoport.</p></div>
+      <div class="footer-col"><h4>Előfizetések</h4><a>Hírlapok</a><a>Női magazinok</a><a>Digitális lapok</a></div>
+      <div class="footer-col"><h4>Információ</h4><a>ÁSZF</a><a>Adatvédelem</a><a>Kapcsolat</a></div>
+      <div class="footer-col"><h4>Ügyfélszolgálat</h4><a>+36 1 999 0000</a><a>info@lapot.hu</a></div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">© 2026 Indamedia Group. Minden jog fenntartva.</div>
+  </footer>
+</div>
+
+<script>
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function selectOption(el) {
+  el.closest('.price-options').querySelectorAll('.price-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function selectShip(el) {
+  el.closest('.ship-modes').querySelectorAll('.ship-mode').forEach(m => m.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// Category pill click
+document.querySelectorAll('.cat-pill').forEach(pill => {
+  pill.addEventListener('click', function() {
+    this.closest('.category-bar').querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+// Filter checkbox toggle
+document.querySelectorAll('.filter-item').forEach(item => {
+  item.addEventListener('click', function() {
+    const cb = this.querySelector('.checkbox');
+    if (cb) {
+      cb.classList.toggle('checked');
+      if (cb.classList.contains('checked')) {
+        cb.innerHTML = '<span class="material-symbols-rounded">check</span>';
+      } else {
+        cb.innerHTML = '';
+      }
+    }
+  });
+});
+
+// Account sidebar
+document.querySelectorAll('.acc-menu-item').forEach(item => {
+  item.addEventListener('click', function() {
+    this.closest('.account-sidebar').querySelectorAll('.acc-menu-item').forEach(m => m.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
